@@ -32,7 +32,7 @@ pub mod build {
     pub fn copy_path(paths: &Paths, file: &str) -> result::Result<(), &'static str> {
         let mut dest = paths.dest.clone();
         if !dest.ends_with("/") {
-            dest.push_str("/");
+            dest.push('/');
         }
         dest.push_str(&file);
 
@@ -51,6 +51,9 @@ pub mod build {
        }
 
         let mut src= paths.src.clone();
+        if !src.ends_with("/") {
+            src.push('/');
+        }
         src.push_str(&file);
 
         match copy(src, dest) {
