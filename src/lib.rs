@@ -13,7 +13,7 @@ mod tests {
     }
 }
 
-mod build {
+pub mod build {
     use std::fs::{copy};
 
     pub struct Paths {
