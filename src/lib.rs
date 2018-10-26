@@ -14,9 +14,10 @@ mod tests {
 }
 
 pub mod build {
-    use std::fs::{copy};
+    use std::fs::{copy, create_dir_all};
     use std::io;
-    
+    use std::path;
+
     pub struct Paths {
         pub src: String,
         pub dest: String,
@@ -31,6 +32,20 @@ pub mod build {
     pub fn copy_path(paths: &Paths, file: &str) -> io::Result<u64> {
         let mut dest = paths.dest.clone();
         dest.push_str(&file);
+
+       {
+            let file_path = path::Path::new(&dest);
+        let parent = match file_path.parent() {
+            None => panic!("can't find parent directory"),
+            Some(p) => p
+        };
+        if !parent.is_dir() {
+            let _ = match parent.to_str() {
+                None => panic!("parent directory not valid string"),
+                Some(s) => create_dir_all(&s)
+            };
+        }
+       }
 
         let mut src= paths.src.clone();
         src.push_str(&file);
