@@ -15,7 +15,8 @@ mod tests {
 
 pub mod build {
     use std::fs::{copy};
-
+    use std::io;
+    
     pub struct Paths {
         pub src: String,
         pub dest: String,
@@ -27,17 +28,13 @@ pub mod build {
         }
     }
 
-    pub fn copy_path(paths: &Paths, file: &str) -> bool {
+    pub fn copy_path(paths: &Paths, file: &str) -> io::Result<u64> {
         let mut dest = paths.dest.clone();
         dest.push_str(&file);
 
         let mut src= paths.src.clone();
         src.push_str(&file);
 
-        let result = copy(src, dest);
-        match result {
-            Ok(_) => true,
-            Err(_) => false
-        }
+        copy(src, dest)
     }
 }
