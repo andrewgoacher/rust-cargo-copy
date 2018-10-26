@@ -15,8 +15,8 @@ mod tests {
 
 pub mod build {
     use std::fs::{copy, create_dir_all};
-    use std::io;
     use std::path;
+    use std::result;
 
     pub struct Paths {
         pub src: String,
@@ -29,19 +29,19 @@ pub mod build {
         }
     }
 
-    pub fn copy_path(paths: &Paths, file: &str) -> io::Result<u64> {
+    pub fn copy_path(paths: &Paths, file: &str) -> result::Result<(), &'static str> {
         let mut dest = paths.dest.clone();
         dest.push_str(&file);
 
        {
             let file_path = path::Path::new(&dest);
-        let parent = match file_path.parent() {
-            None => panic!("can't find parent directory"),
+            let parent = match file_path.parent() {
+            None => return result::Result::Err("can't find directory path"),
             Some(p) => p
         };
         if !parent.is_dir() {
             let _ = match parent.to_str() {
-                None => panic!("parent directory not valid string"),
+                None => return result::Result::Err("parent directory not valid string"),
                 Some(s) => create_dir_all(&s)
             };
         }
@@ -50,6 +50,9 @@ pub mod build {
         let mut src= paths.src.clone();
         src.push_str(&file);
 
-        copy(src, dest)
+        match copy(src, dest) {
+            Ok(_) => result::Result::Ok(()),
+            Err(_) => result::Result::Err("Copy failed")
+        }
     }
 }
