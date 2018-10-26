@@ -1,5 +1,5 @@
 [package]
-name = "cargo-copy-contents"
+name = "cargo_copy_contents"
 version = "0.1.0"
 authors = ["Andrew Goacher <andrewgoacher@outlook.com>"]
 
